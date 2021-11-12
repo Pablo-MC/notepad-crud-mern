@@ -5,6 +5,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 
 import authRoutes from './routes/auth.routes';
+import noteRoutes from './routes/note.routes';
 
 import { connectDB } from './database';
 
@@ -20,6 +21,7 @@ app.use(express.json()); // Permite al servidor interpretar los formatos json qu
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/note', noteRoutes);
 
 // app.get('/api/user', (req, res) => res.send('Users route'));
 

@@ -29,3 +29,21 @@ export const register = async function (req, res) {
   }
 }
 
+export const login = async function (req, res) {
+  try {
+    const { email, password } = req.body;
+
+    // Verificar si es un usuario que ya esta registrado.
+    const user = await User.findOne({ email: email }); // Retorna un objeto (true) ó null (false).
+    if (!user) return res.status(400).json({ message: 'The user not exist' });
+
+    // Verificar si el password que nos envía el usuario matchea con el password del usuario registrado.
+    const matchPassword = await bcryptjs.compare(password, user.password); // Retorna un boolean. 
+    if (!matchPassword) return res.status(400).json({ message: 'Invalid password' });
+
+    // Enviar usuario al cliente. 
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
