@@ -9,6 +9,15 @@ export const getAllNotes = async function (req, res) {
   }
 }
 
+export const getNotesByUser = async function (req, res) {
+  try {
+    const notes = await Note.find({ author: req.params.userId });
+    res.status(200).json(notes);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 export const getNote = async function (req, res) {
   try {
     const note = await Note.findById(req.params.id); // :id
