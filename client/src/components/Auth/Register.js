@@ -1,48 +1,61 @@
-import { useRef } from 'react';
-import register from './../../assets/register.svg';
+import { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { register } from '../../store/auth/auth-actions';
 
-const Register = (props) => {
+import registerImg from './../../assets/register.svg';
 
-  props.onShowLogin(false);
+const Register = () => {
 
   const username = useRef();
   const email = useRef();
   const password = useRef();
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const registered = useSelector(state => state.auth.registered);
+  const error = useSelector(state => state.notification.error);
+
+  useEffect(() => {
+    if (registered) navigate({ pathname: '/login' });
+  }, [registered, navigate]);
+
   const submitHandler = (e) => {
     e.preventDefault();
 
-    console.log(
-      username.current.value, ' ',
-      email.current.value, ' ',
-      password.current.value
-    );
+    dispatch(register({
+      username: username.current.value,
+      email: email.current.value,
+      password: password.current.value
+    }));
   }
 
   return (
-    <div className="m-auto" style={{ width: '18rem' }}>
-      <img src={register} className="card-img-top mt-5" alt='login' />
+    <div className="auth">
+      <img src={registerImg} className="card-img-top" alt='register' />
       <div className="card-body text-center">
-        <p className="card-text">Create and save your favorite notes!</p>
         <form onSubmit={submitHandler}>
-          <div className="mb-3">
+          <div className="py-3">
             <input
               type="text"
               ref={username}
               className="form-control"
               placeholder='Name'
+              required
             />
           </div>
           <div className="mb-3">
             <input
               type="email"
               ref={email}
-              className="form-control"
+              className={`form-control ${error && 'is-invalid'}`}
               placeholder='Email address'
               required
             />
+            {error && <div className="invalid-feedback">{error}</div>}
           </div>
-          <div className="mb-3">
+          <div className="mb-4">
             <input
               type="password"
               ref={password}
