@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../../store/auth/auth-actions';
 
+import swal from 'sweetalert';
 import registerImg from './../../assets/register.svg';
 
 const Register = () => {
@@ -18,7 +19,16 @@ const Register = () => {
   const error = useSelector(state => state.notification.error);
 
   useEffect(() => {
-    if (registered) navigate({ pathname: '/login' });
+    if (registered) {
+      navigate({ pathname: '/login' });
+
+      swal({
+        text: 'Successful registration! 😀',
+        icon: "success",
+        timer: 2500,
+        buttons: false,
+      });
+    }
   }, [registered, navigate]);
 
   const submitHandler = (e) => {
